@@ -27,16 +27,16 @@ public class Main {
      * Boots the bot arguments expected are the bot token.
      **/
 
-    public static final String PREFIX = "~";
     public static SQLMCBridge sqlmc;
     public static SQLBridge sqlpr;
+    public static Config mainConfig;
 
     public static void main(String[] args) {
 
         //We build our config
-        Config config = new Config();
+        mainConfig = new Config();
         try {
-            if(!config.load("config.yml")) {
+            if(!mainConfig.load("config.yml")) {
                 System.err.println("Error loading config.");
                 return;
             }
@@ -45,17 +45,17 @@ public class Main {
             return;
         }
 
-        sqlmc = new SQLMCBridge(config.getMcdbhost(), String.valueOf(config.getMcdbport()), config.getMcdbname(),
-                config.getMcdbuser(), config.getMcdbpw());
+        sqlmc = new SQLMCBridge(mainConfig.getMcdbhost(), String.valueOf(mainConfig.getMcdbport()), mainConfig.getMcdbname(),
+                mainConfig.getMcdbuser(), mainConfig.getMcdbpw());
 
-        sqlpr = new SQLBridge(config.getCoredbhost(), String.valueOf(config.getCoredbport()), config.getCoredbname(),
-                config.getCoredbuser(), config.getCoredbpw());
+        sqlpr = new SQLBridge(mainConfig.getCoredbhost(), String.valueOf(mainConfig.getCoredbport()), mainConfig.getCoredbname(),
+                mainConfig.getCoredbuser(), mainConfig.getCoredbpw());
 
 
         //We would our bot.
-        JDABuilder builder = JDABuilder.createDefault(config.getToken());
-        //We set basic settings.
+        JDABuilder builder = JDABuilder.createDefault(mainConfig.getBotToken());
 
+        //We set basic settings.
         builder.disableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE);
         builder.setBulkDeleteSplittingEnabled(false);
         builder.setAutoReconnect(true);

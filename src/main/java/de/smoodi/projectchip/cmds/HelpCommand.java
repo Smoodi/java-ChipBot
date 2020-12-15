@@ -19,7 +19,7 @@ public class HelpCommand extends AbstractCommand {
         str.append(Util.randomTitleHelp());
         str.append("\n\nHere's a little help for you.\n" +
                 "\n" +
-                "**Prefix:** \n" + Main.PREFIX +
+                "**Prefix:** \n" + Main.mainConfig.getBotPrefix() +
                 "\n" +
                 "__**Commands usable:**__\n" +
                 "\n" +

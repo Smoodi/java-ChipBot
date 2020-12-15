@@ -36,11 +36,11 @@ public class MessageListener extends ListenerAdapter {
         String msg = e.getMessage().getContentRaw();
 
         //Parsing the command.
-        if(msg.startsWith(Main.PREFIX)) {
+        if(msg.startsWith(Main.mainConfig.getBotPrefix())) {
             int i = msg.indexOf(" ");
             if (i == -1) i = msg.length();
 
-            String cmd = msg.substring(Main.PREFIX.length(), Math.max(Main.PREFIX.length(), i));
+            String cmd = msg.substring(Main.mainConfig.getBotPrefix().length(), Math.max(Main.mainConfig.getBotPrefix().length(), i));
 
             final int min = Math.min(i + 1, msg.length());
             int argc = 0;

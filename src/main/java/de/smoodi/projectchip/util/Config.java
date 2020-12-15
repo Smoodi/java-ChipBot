@@ -10,13 +10,15 @@ import java.util.Map;
 
 public class Config {
 
+    private String botToken;
+    private String botVersion;
+    private String botPrefix;
+
     private String mcdbhost;
     private String mcdbname;
     private String mcdbuser;
     private String mcdbpw;
     private int mcdbport;
-
-    private String token;
 
     private String coredbhost;
     private String coredbname;
@@ -36,7 +38,10 @@ public class Config {
 
         Map<String, Object> obj = (Map<String, Object>) yaml.load(inputStream);
 
-        token = (String) obj.get("token");
+        botToken = (String) obj.get("botToken");
+        botVersion = (String)  obj.get("botVersion");
+        botPrefix = (String) obj.get("botPrefix");
+
         mcdbhost = (String) obj.get("whitelistDBHost");
         mcdbname = (String) obj.get("whitelistDBName");
         mcdbport = (int) obj.get("whitelistDBPort");
@@ -52,6 +57,13 @@ public class Config {
         return true;
 
     }
+
+    public String getBotToken() { return botToken; }
+
+    public String getBotVersion() { return botVersion; }
+
+    public String getBotPrefix() { return botPrefix; }
+
 
     public String getMcdbhost() {
         return mcdbhost;
@@ -73,9 +85,6 @@ public class Config {
         return mcdbport;
     }
 
-    public String getToken() {
-        return token;
-    }
 
     public String getCoredbhost() {
         return coredbhost;

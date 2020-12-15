@@ -26,7 +26,7 @@ public class MCCommand extends AbstractCommand{
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setTitle("Minecraft ist already linked!");
                     eb.setThumbnail("http://dl.smoodi.de/server-icon.png");
-                    eb.setDescription("Your discord account is already linked with a Minecraft account.\nIf you want to alter the linked account please write\n - " + Main.PREFIX + "mc <minecraftusername>");
+                    eb.setDescription("Your discord account is already linked with a Minecraft account.\nIf you want to alter the linked account please write\n - " + Main.mainConfig.getBotPrefix() + "mc <minecraftusername>");
 
                     eb.addField("Current Minecraft linked: ", MinecraftUtil.getPlayerName(p.getUuid().toString()), false);
                     eb.setImage("https://crafatar.com/renders/body/" + p.getUuid().toString());
@@ -35,7 +35,7 @@ public class MCCommand extends AbstractCommand{
                     ev.getChannel().sendMessage(eb.build()).queue();
                 } else {
 
-                    ev.getChannel().sendMessage("There is no minecraft account associated with your discord account yet. Please enter ``" + Main.PREFIX + "mc <username>`` to bind an account.").queue();
+                    ev.getChannel().sendMessage("There is no minecraft account associated with your discord account yet. Please enter ``" + Main.mainConfig.getBotPrefix() + "mc <username>`` to bind an account.").queue();
                 }
             }
             else {
@@ -67,7 +67,7 @@ public class MCCommand extends AbstractCommand{
                         else{
                             Main.sqlmc.addMinecraftAccount(UUID.fromString(uuid), ev.getAuthor().getIdLong());
                             ev.getChannel().sendMessage(":white_check_mark: **Successfully linked with " + args[0]+".**\nPlease note that false claiming can lead to bans or other forms of restrictions\n" +
-                                    "To check your currently linked account type in ``" + Main.PREFIX + "mc`` without any further arguments.\n" +
+                                    "To check your currently linked account type in ``" + Main.mainConfig.getBotPrefix() + "mc`` without any further arguments.\n" +
                                     "To change your currently linked account just reuse this command like you did now.\n").queue();
                         }
                     }

@@ -1,5 +1,6 @@
     package de.smoodi.projectchip;
 
+import de.smoodi.projectchip.cmds.CommandHandler;
 import de.smoodi.projectchip.cmds.HelpCommand;
 import de.smoodi.projectchip.cmds.MCCommand;
 import de.smoodi.projectchip.cmds.MCRCommand;
@@ -88,24 +89,13 @@ public class Main {
             return;
         }
 
-        //Adding listeners
-
-        MessageListener msgListener = new MessageListener();
-        MCCommand mc = new MCCommand();
-        MCRCommand mcr = new MCRCommand();
-        HelpCommand help = new HelpCommand();
-        //Adding the minecraft command as with ~mc and ~minecraft
-        msgListener.registerTextCommand("mc", mc);
-        msgListener.registerTextCommand("minecraft", mc);
-        //Adding the minecraft remove command as ~mcr and ~minecraftremove
-        msgListener.registerTextCommand("mcr", mcr);
-        msgListener.registerTextCommand("minecraftremove", mcr);
-        //Adding help..
-        msgListener.registerTextCommand("help", help);
-        msgListener.registerTextCommand("?", help);
+        //Registering commands.
+        CommandHandler.registerTextCommand(new HelpCommand());
+        CommandHandler.registerTextCommand(new MCCommand());
+        CommandHandler.registerTextCommand(new MCRCommand());
 
         //Dumping listeners.
-        jda.addEventListener(msgListener);
+        jda.addEventListener(new MessageListener());
         jda.addEventListener(new JoinLeaveListener());
 
     }

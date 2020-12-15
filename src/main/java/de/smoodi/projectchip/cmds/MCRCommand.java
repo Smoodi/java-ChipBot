@@ -7,6 +7,32 @@ import java.sql.SQLException;
 
 public class MCRCommand extends AbstractCommand{
 
+    @Override
+    public String[] getAliases() {
+        return new String[] {
+                "mcr",
+                "minecraftremove"
+        };
+    }
+
+    @Override
+    public String getShortDescription() {
+        return "Used for removing the linked minecraft account.";
+    }
+
+    @Override
+    public String getUsage() {
+        return "";
+    }
+
+    @Override
+    public String getDescription() {
+        return "This command allows you to add and change your linked minecraft account.\nUse " + Main.mainConfig.getBotPrefix() +
+                "mc to add or change your current minecraft account linked.\nUse " + Main.mainConfig.getBotPrefix() + "mc to see infos about "+
+                "your currently linked one.";
+    }
+
+
     /**
      * This command removes the link between a mc account and a discord one.
      * @param ev

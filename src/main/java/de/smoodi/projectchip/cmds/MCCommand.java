@@ -11,6 +11,32 @@ import java.util.UUID;
 
 public class MCCommand extends AbstractCommand{
 
+    @Override
+    public String[] getAliases() {
+        return new String[] {
+                "mc",
+                "minecraft"
+        };
+    }
+
+    @Override
+    public String getShortDescription() {
+        return "Used for adding and changing your linked minecraft account as well as viewing the current settings.";
+    }
+
+    @Override
+    public String getUsage() {
+        return "<minecraftusername>\nfor changing the currently linked account. Otherwise, only " + Main.mainConfig.getBotPrefix() + "mc";
+    }
+
+    @Override
+    public String getDescription() {
+        return "This command allows you to add and change your linked minecraft account.\nUse " + Main.mainConfig.getBotPrefix() +
+                "mc to add or change your current minecraft account linked.\nUse " + Main.mainConfig.getBotPrefix() + "mc to see infos about "+
+                "your currently linked one.";
+    }
+
+
     /**
      * This command deals with all cases of adding and readding the user's mc link.
      * @param ev

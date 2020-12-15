@@ -20,8 +20,8 @@ public class SQLBridge {
             con = DriverManager.getConnection( "jdbc:mysql://" + host + ":" + port + "/" + dbname, username, pw);
             con.setAutoCommit(false);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
     }

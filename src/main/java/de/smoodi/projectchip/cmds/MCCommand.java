@@ -75,8 +75,8 @@ public class MCCommand extends AbstractCommand{
             }
         }
 
-        catch (SQLException throwables) {
-            throwables.printStackTrace();
+        catch (SQLException ex) {
+            ex.printStackTrace();
         }
 
     }

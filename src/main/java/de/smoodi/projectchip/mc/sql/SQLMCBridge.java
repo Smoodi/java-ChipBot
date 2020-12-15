@@ -159,8 +159,8 @@ public class SQLMCBridge {
 
             System.out.println("Successfully (re-)connected to the DB...");
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 

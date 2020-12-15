@@ -40,8 +40,8 @@ public class Main {
                 System.err.println("Error loading config.");
                 return;
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
             return;
         }
 
@@ -83,8 +83,8 @@ public class Main {
         try {
             jda = builder.build();
             jda.awaitReady();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
             return;
         }
 

@@ -23,8 +23,8 @@ public class MCRCommand extends AbstractCommand{
             else {
                 ev.getChannel().sendMessage(":x: You have no account linked.").queue();
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 }

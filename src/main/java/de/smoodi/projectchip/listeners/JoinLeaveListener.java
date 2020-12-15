@@ -28,8 +28,8 @@ public class JoinLeaveListener extends ListenerAdapter {
             else {
                 System.out.println("This member has no discord / minecraft account linked.");
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -51,8 +51,8 @@ public class JoinLeaveListener extends ListenerAdapter {
                 System.out.println("This member had no linked discord / minecraft.");
             }
         }
-        catch (SQLException throwables) {
-            throwables.printStackTrace();
+        catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 

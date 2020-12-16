@@ -22,14 +22,12 @@ public class MCRCommand extends AbstractCommand{
 
     @Override
     public String getUsage() {
-        return "";
+        return "\nUse `" + Main.mainConfig.getBotPrefix() + "mcr` to remove your linked minecraft account";
     }
 
     @Override
     public String getDescription() {
-        return "This command allows you to add and change your linked minecraft account.\nUse " + Main.mainConfig.getBotPrefix() +
-                "mc to add or change your current minecraft account linked.\nUse " + Main.mainConfig.getBotPrefix() + "mc to see infos about "+
-                "your currently linked one.";
+        return "This command allows you to remove your linked minecraft account, thus removing it from the whitelist.";
     }
 
 

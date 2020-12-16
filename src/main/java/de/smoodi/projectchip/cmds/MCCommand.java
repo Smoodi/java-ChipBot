@@ -26,14 +26,13 @@ public class MCCommand extends AbstractCommand{
 
     @Override
     public String getUsage() {
-        return "<minecraftusername>\nfor changing the currently linked account. Otherwise, only " + Main.mainConfig.getBotPrefix() + "mc";
+        return "\nUse `" + Main.mainConfig.getBotPrefix() + "mc <minecraft-username>` to add or change your current minecraft account linked." +
+               "\nUse `" + Main.mainConfig.getBotPrefix() + "mc` to see info about your currently linked one.";
     }
 
     @Override
     public String getDescription() {
-        return "This command allows you to add and change your linked minecraft account.\nUse " + Main.mainConfig.getBotPrefix() +
-                "mc to add or change your current minecraft account linked.\nUse " + Main.mainConfig.getBotPrefix() + "mc to see infos about "+
-                "your currently linked one.";
+        return "This command allows you to add and change your linked minecraft account.";
     }
 
 

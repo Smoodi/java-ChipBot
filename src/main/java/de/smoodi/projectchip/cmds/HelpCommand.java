@@ -2,7 +2,11 @@ package de.smoodi.projectchip.cmds;
 
 import de.smoodi.projectchip.Main;
 import de.smoodi.projectchip.util.Util;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
+import java.awt.*;
+import java.time.Instant;
 
 public class HelpCommand extends AbstractCommand {
 
@@ -11,7 +15,7 @@ public class HelpCommand extends AbstractCommand {
     public String[] getAliases() {
         return new String[] {
                 "help",
-            "?"
+                "?"
         };
     }
 
@@ -22,8 +26,9 @@ public class HelpCommand extends AbstractCommand {
 
     @Override
     public String getUsage() {
-        return "\nUse this command to get help about which command are available. Get further help about specific commands by entering them as an argument.\nFor example "
-                + Main.mainConfig.getBotPrefix() + "help mc";
+        return "\nUse `" + Main.mainConfig.getBotPrefix() + "help <command-alias>` to view information about a specific command" +
+               "\nUse `" + Main.mainConfig.getBotPrefix() + "help` to view all available commands" +
+                "\nUse `" + Main.mainConfig.getBotPrefix() + "help conceptual` to view all Work-In-Progress commands";
     }
 
     @Override
@@ -38,57 +43,69 @@ public class HelpCommand extends AbstractCommand {
      */
     @Override
     public void execute(MessageReceivedEvent ev, String[] args) {
+        StringBuilder sbConceptual = new StringBuilder();
 
-        if(args.length < 1) {
-        StringBuilder str = new StringBuilder();
-        str.append(Util.randomTitleHelp());
-        str.append("\n\nHere's a little help for you.\n" +
-                "\n" +
-                "**Prefix:** \n" + Main.mainConfig.getBotPrefix() +
-                "\n" +
-                "__**Commands usable:**__\n" +
-                "\n");
+        String ebIcon = ev.getGuild().getIconUrl();
+        Color ebColor = new Color(0,153,255);
+        String ebAuthor = ev.getAuthor().getAvatarUrl();
 
-        for (AbstractCommand cmd : CommandHandler.getCommands()) {
-            str.append(" `" + cmd.getAliases()[0] + "`: " + cmd.getShortDescription() + "\n");
-        }
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setColor(ebColor);
+        eb.setThumbnail(ebIcon);
+        eb.setTimestamp(Instant.now());
+        eb.setFooter(Util.randomTitleHelp(),ebAuthor);
 
-        str.append(
-                "\n" +
-                "__**Conceptual commands in work:**__\n" +
-                "\n" +
-                " - `gif` This command will allow you to use a range of carefully moderated gifs out of a library in chats.\n" +
-                " - `gifsuggest` This command will allow you to generate gifs based on YouTube videos and their timestamps. They will be suggested and stored.\n" +
-                " - `gifinfo` This command will give you information about a gif out of the moderated gif-library, such as it's source, timestamp and more.\n");
+        if (args.length < 1) {
+            eb.setTitle("Commands List");
 
-        ev.getChannel().sendMessage(str.toString()).queue();
-
-        }
-        else {
+            for (AbstractCommand cmd : CommandHandler.getCommands()) {
+                eb.addField(Main.mainConfig.getBotPrefix()+cmd.getAliases()[0], cmd.getShortDescription(), false);
+            }
+        } else if (args[0].equals("conceptual")) {
+            sbConceptual.append("**__Conceptual commands in work:__**\n" +
+                    "\n" +
+                    " - `gif` This command will allow you to use a range of carefully moderated gifs out of a library in chats.\n" +
+                    " - `gifsuggest` This command will allow you to generate gifs based on YouTube videos and their timestamps. They will be suggested and stored.\n" +
+                    " - `gifinfo` This command will give you information about a gif out of the moderated gif-library, such as it's source, timestamp and more.");
+        } else {
+            eb.setTitle("Command Specifics: "+Main.mainConfig.getBotPrefix()+args[0]);
+            StringBuilder disabledProperties = new StringBuilder();
             AbstractCommand cmd = CommandHandler.getCommand(args[0]);
-            if(cmd != null) {
-                StringBuilder str = new StringBuilder();
-                str.append(Util.randomTitleHelp());
-                str.append("\n\nHere's a little help for you.\n" +
-                        "\n" +
-                        "__**Information about the " + cmd.getAliases()[0] + " command:**__ "+
-                        "\n" +
-                        "**Usage:** " + Main.mainConfig.getBotPrefix() + cmd.getAliases()[0] + " " + cmd.getUsage() +
-                        "\n");
-                str.append("**Cooldown:** " + getCooldown() + " seconds.\n");
-                str.append("**Aliases:** ");
-                String[] al = cmd.getAliases();
-                for(int i = 1; i < al.length; i++) {
-                    str.append(al[i]);
-                    if(i != al.length - 1) str.append(", ");
-                }
-                str.append("\n\n**Description:**\n" + cmd.getDescription());
 
-                ev.getChannel().sendMessage(str.toString()).queue();
+            if(cmd != null) {
+                String[] cmdAliases = cmd.getAliases();
+                StringBuilder sbAliases = new StringBuilder();
+                for(int i = 1; i < cmdAliases.length; i++) {
+                    sbAliases.append(cmdAliases[i]);
+                    if(i != cmdAliases.length - 1) sbAliases.append(", ");
+                }
+
+                if (sbAliases.length() > 0) {
+                    eb.addField("Aliases", sbAliases.toString(), false);
+                } else {
+                    if (disabledProperties.length() > 0) disabledProperties.append(", ");
+                    disabledProperties.append("Aliases");
+                }
+                if (cmd.getCooldown() > 0) {
+                    eb.addField("Cooldown", cmd.getCooldown() + " seconds", false);
+                } else {
+                    if (disabledProperties.length() > 0) disabledProperties.append(", ");
+                    disabledProperties.append("Cooldown");
+                }
+
+                eb.addField("Description", cmd.getDescription(), false);
+                eb.addField("Usage", cmd.getUsage(), false);
+                if (disabledProperties.length() > 0) eb.addField("Disabled Properties", disabledProperties.toString(),false);
+
+            } else {
+                eb.addField("Command not found", "This command does not exist/has not been implemented yet", false);
             }
-            else {
-                ev.getChannel().sendMessage(":x: Command not found. Please enter " + Main.mainConfig.getBotPrefix() + "help for all commands.").queue();
-            }
+        }
+
+        if (sbConceptual.length() > 0) {
+            ev.getChannel().sendMessage(sbConceptual.toString()).queue();
+        } else {
+            ev.getChannel().sendMessage(eb.build()).queue();
         }
     }
 

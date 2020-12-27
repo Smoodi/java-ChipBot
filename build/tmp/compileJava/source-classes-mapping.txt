@@ -1,30 +1,30 @@
-de/smoodi/projectchip/cmds/MCRCommand.java
- de.smoodi.projectchip.cmds.MCRCommand
+de/smoodi/projectchip/util/MinecraftUtil.java
+ de.smoodi.projectchip.util.MinecraftUtil
 de/smoodi/projectchip/cmds/AbstractCommand.java
  de.smoodi.projectchip.cmds.AbstractCommand
 de/smoodi/projectchip/cmds/CommandHandler.java
  de.smoodi.projectchip.cmds.CommandHandler
-de/smoodi/projectchip/cmds/HelpCommand.java
- de.smoodi.projectchip.cmds.HelpCommand
+de/smoodi/projectchip/util/Util.java
+ de.smoodi.projectchip.util.Util
 de/smoodi/projectchip/cmds/CommandWhitelist.java
  de.smoodi.projectchip.cmds.CommandWhitelist
 de/smoodi/projectchip/util/Config.java
  de.smoodi.projectchip.util.Config
 de/smoodi/projectchip/mc/sql/UserProfile.java
  de.smoodi.projectchip.mc.sql.UserProfile
+de/smoodi/projectchip/cmds/MCRCommand.java
+ de.smoodi.projectchip.cmds.MCRCommand
 de/smoodi/projectchip/listeners/MessageListener.java
  de.smoodi.projectchip.listeners.MessageListener
-de/smoodi/projectchip/util/Util.java
- de.smoodi.projectchip.util.Util
 de/smoodi/projectchip/Main.java
  de.smoodi.projectchip.Main
 de/smoodi/projectchip/cmds/MCCommand.java
  de.smoodi.projectchip.cmds.MCCommand
+de/smoodi/projectchip/cmds/HelpCommand.java
+ de.smoodi.projectchip.cmds.HelpCommand
 de/smoodi/projectchip/mc/sql/SQLMCBridge.java
  de.smoodi.projectchip.mc.sql.SQLMCBridge
 de/smoodi/projectchip/listeners/JoinLeaveListener.java
  de.smoodi.projectchip.listeners.JoinLeaveListener
-de/smoodi/projectchip/util/MinecraftUtil.java
- de.smoodi.projectchip.util.MinecraftUtil
 de/smoodi/projectchip/sql/SQLBridge.java
  de.smoodi.projectchip.sql.SQLBridge

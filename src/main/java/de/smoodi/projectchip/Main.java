@@ -97,8 +97,9 @@ public class Main {
         CommandHandler.registerTextCommand(new MCCommand());
         CommandHandler.registerTextCommand(new MCRCommand());
 
-        CommandHandler.getDefaultWhitelist().whitelist(539057336904450058L);
-        CommandHandler.getDefaultWhitelist().whitelist(542064174826520582L);
+        CommandHandler.getDefaultWhitelist().whitelist(539057336904450058L); // ?
+        CommandHandler.getDefaultWhitelist().whitelist(542064174826520582L); // Botto
+        CommandHandler.getDefaultWhitelist().whitelist(550080151040294922L); // Botto testo
 
         //Dumping listeners.
         jda.addEventListener(new MessageListener());

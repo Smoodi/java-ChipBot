@@ -36,8 +36,10 @@ public class CommandHandler {
      */
     public static void executeCommand(String cmd, MessageReceivedEvent event, String[] args) {
         AbstractCommand _cmd = getCommand(cmd);
-        if(_cmd != null)
-            _cmd.execute(event, args);
+        if(_cmd != null) {
+            if(_cmd.canBeExecuted(event))
+                _cmd.execute(event, args);
+        }
     }
 
 

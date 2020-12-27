@@ -41,8 +41,16 @@ public class SQLMCBridge {
     public boolean isDiscordLinked(long discordId) throws SQLException {
         fixClosedTimeout();
         PreparedStatement stm = con.prepareStatement("SELECT * FROM whitelisted_players WHERE DiscordID = \""+ String.valueOf(discordId) + "\";");
-        if(!stm.execute()) return false;
-        return stm.getResultSet().next();
+        if(!stm.execute()) {
+            stm.close();
+            return false;
+        }
+        boolean linked = false;
+        ResultSet rs = stm.getResultSet();
+        linked = rs.next();
+        rs.close();
+        stm.close();
+        return linked;
     }
 
     /**
@@ -56,8 +64,15 @@ public class SQLMCBridge {
         PreparedStatement stm = con.prepareStatement("SELECT * FROM whitelisted_players WHERE UUID=\""+uuid+"\"");
         if(stm.execute()) {
             ResultSet r = stm.getResultSet();
-            if(!r.next()) return null;
-            return new UserProfile(UUID.fromString(uuid), r.getLong("DiscordID"), r.getBoolean("IsWhitelisted"), r.getString("Nickname"), r.getTimestamp("TimeAdded"), r.getBoolean("Banned"));
+            if(!r.next()) {
+                r.close();
+                stm.close();
+                return null;
+            }
+            UserProfile up = new UserProfile(UUID.fromString(uuid), r.getLong("DiscordID"), r.getBoolean("IsWhitelisted"), r.getString("Nickname"), r.getTimestamp("TimeAdded"), r.getBoolean("Banned"));
+            r.close();
+            stm.close();
+            return up;
         }
         else return null;
     }
@@ -73,8 +88,15 @@ public class SQLMCBridge {
         PreparedStatement stm = con.prepareStatement("SELECT * FROM whitelisted_players WHERE DiscordID="+String.valueOf(discordId)+";");
         if(stm.execute()) {
             ResultSet r = stm.getResultSet();
-            if(!r.next()) return null;
-            return new UserProfile(UUID.fromString(r.getString("UUID")), r.getLong("DiscordID"), r.getBoolean("IsWhitelisted"), r.getString("Nickname"), r.getTimestamp("TimeAdded"), r.getBoolean("Banned"));
+            if(!r.next()) {
+                r.close();
+                stm.close();
+                return null;
+            }
+            UserProfile up = new UserProfile(UUID.fromString(r.getString("UUID")), r.getLong("DiscordID"), r.getBoolean("IsWhitelisted"), r.getString("Nickname"), r.getTimestamp("TimeAdded"), r.getBoolean("Banned"));
+            r.close();
+            stm.close();
+            return up;
         }
         else return null;
     }
@@ -90,7 +112,9 @@ public class SQLMCBridge {
         fixClosedTimeout();
         PreparedStatement stm = con.prepareStatement("INSERT INTO `whitelisted_players` (`UUID`, `DiscordID`, `IsWhitelisted`) VALUES ('" +
                 mc_uuid.toString() + "', '" + String.valueOf(discordId) + "', '1');");
-        return stm.execute();
+        boolean success = stm.execute();
+        stm.close();
+        return success;
     }
 
     /**
@@ -104,7 +128,9 @@ public class SQLMCBridge {
         fixClosedTimeout();
         PreparedStatement stm = con.prepareStatement("UPDATE whitelisted_players SET IsWhitelisted = '" + (whitelisted ? 1 : 0 ) +
                 "'  WHERE DiscordID = '"+String.valueOf(discordId)+"';");
-        return stm.execute();
+        boolean success = stm.execute();
+        stm.close();
+        return success;
     }
 
     /**
@@ -118,7 +144,9 @@ public class SQLMCBridge {
     public boolean updateMinecraftAccount (long discordId, UUID mc_uuid) throws SQLException {
         fixClosedTimeout();
         PreparedStatement stm = con.prepareStatement("UPDATE whitelisted_players SET UUID = '" + mc_uuid.toString() + "' WHERE discordId = '" + String.valueOf(discordId) + "';");
-        return stm.execute();
+        boolean success = stm.execute();
+        stm.close();
+        return success;
     }
 
     /**
@@ -130,7 +158,9 @@ public class SQLMCBridge {
     public boolean deleteEntry(long discordId) throws SQLException {
         fixClosedTimeout();
         PreparedStatement stm = con.prepareStatement("DELETE FROM `whitelisted_players` WHERE `whitelisted_players`.`DiscordID` = '" + String.valueOf(discordId) + "'" );
-        return stm.execute();
+        boolean success = stm.execute();
+        stm.close();
+        return success;
     }
 
     /**

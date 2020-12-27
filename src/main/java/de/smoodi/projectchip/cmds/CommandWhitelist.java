@@ -31,12 +31,20 @@ public class CommandWhitelist {
         whitelistedChannels.add(channel.getIdLong());
     }
 
+    public void whitelist(long id) {
+        whitelistedChannels.add(id);
+    }
+
     /**
      * Unwhitelists the channel.
      * @param channel
      */
     public void unwhitelist(MessageChannel channel) {
         whitelistedChannels.remove(channel.getIdLong());
+    }
+
+    public void unwhitelist(long id) {
+        whitelistedChannels.remove(id);
     }
 
     /**

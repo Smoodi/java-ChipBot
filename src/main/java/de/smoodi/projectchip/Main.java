@@ -12,6 +12,7 @@ import de.smoodi.projectchip.util.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
@@ -90,9 +91,14 @@ public class Main {
         }
 
         //Registering commands.
+        //For the init.
+        new CommandHandler();
         CommandHandler.registerTextCommand(new HelpCommand());
         CommandHandler.registerTextCommand(new MCCommand());
         CommandHandler.registerTextCommand(new MCRCommand());
+
+        CommandHandler.getDefaultWhitelist().whitelist(539057336904450058L);
+        CommandHandler.getDefaultWhitelist().whitelist(542064174826520582L);
 
         //Dumping listeners.
         jda.addEventListener(new MessageListener());

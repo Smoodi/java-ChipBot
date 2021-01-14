@@ -26,6 +26,11 @@ public class Config {
     private String coredbpw;
     private int coredbport;
 
+    private long rulesChannelId;
+    private long certifiedRoleId;
+    private long excludedRoleReactionMsgId0;
+    private long excludedRoleReactionMsgId1;
+
     public Config() {
     }
 
@@ -53,6 +58,11 @@ public class Config {
         coredbport = (int) obj.get("primaryDBPort");
         coredbuser = (String) obj.get("primaryDBUser");
         coredbpw = (String) obj.get("primaryDBPassword");
+
+        certifiedRoleId = (long) obj.get("certifiedRoleId");
+        rulesChannelId = (long) obj.get("rulesChannelId");
+        excludedRoleReactionMsgId0 = (long) obj.get("excludedRoleReactionMsgId0");
+        excludedRoleReactionMsgId1 = (long) obj.get("excludedRoleReactionMsgId1");
 
         return true;
 
@@ -105,4 +115,13 @@ public class Config {
     public int getCoredbport() {
         return coredbport;
     }
+
+    public long getCertifiedRoleId() {
+        return certifiedRoleId;
+    }
+
+    public long getRulesChannelId() { return rulesChannelId; }
+
+    public long getExcludedRoleReactionMsgId() { return excludedRoleReactionMsgId0; }
+    public long getExcludedRoleReactionMsgId2() { return excludedRoleReactionMsgId1; }
 }

@@ -1,6 +1,8 @@
 package de.smoodi.projectchip.listeners;
 
 import de.smoodi.projectchip.Main;
+import de.smoodi.projectchip.sql.MemberProfile;
+import de.smoodi.projectchip.sql.SQLBridge;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -15,18 +17,41 @@ public class JoinLeaveListener extends ListenerAdapter {
      */
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        System.out.println("New / Old member (re-)joined...");
+        System.out.println("A member joined the discord.");
 
         try {
-            if( Main.sqlmc.isDiscordLinked(event.getUser().getIdLong())) {
-                System.out.println("This member was active in here before - We'll reactivate his account.");
+            boolean known = Main.sqlpr.existsUserEntry(event.getUser().getIdLong());
+
+            if(known) {
+                System.out.println("We know this user. Let's check it's certification status.");
+                MemberProfile mp = Main.sqlpr.getMemberInformation(event.getUser().getIdLong());
+                System.out.println("Looks like " + mp.getFirstJoinName() + " rejoined. He was " + (!mp.isCertified() ? "not " : "") + "certified.");
+
+                //TOOD: ADD TEMPORARY ROC FUNCTIONALITY
+                if(!mp.isBanned()) {
+                    if(mp.isCertified()) {
+                        event.getGuild().addRoleToMember(event.getUser().getIdLong(), event.getJDA().getRoleById(Main.mainConfig.getCertifiedRoleId())).queue();
+                        System.out.println("We gave this user back his certification role.");
+                    }
+
+                    //Minecraft reauthentification.
+                    if (Main.sqlmc.isDiscordLinked(event.getUser().getIdLong())) {
+                        System.out.println("This member has linked their Minecraft before - We'll reactivate his account.");
 
 
-                Main.sqlmc.updateWhitelistedStatus(event.getUser().getIdLong(), true);
+                        Main.sqlmc.updateWhitelistedStatus(event.getUser().getIdLong(), true);
 
+                    } else {
+                        System.out.println("This member has no discord / minecraft account linked.");
+                    }
+                } else {
+                    if(mp.isCertified()) {
+                        System.out.println("This user has been banned. It will not be certified again.");
+                    }
+                }
             }
             else {
-                System.out.println("This member has no discord / minecraft account linked.");
+                Main.sqlpr.addUserEntry(event.getUser().getIdLong(), event.getUser().getName());
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

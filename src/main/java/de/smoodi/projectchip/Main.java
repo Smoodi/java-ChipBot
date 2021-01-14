@@ -4,6 +4,7 @@ import de.smoodi.projectchip.cmds.CommandHandler;
 import de.smoodi.projectchip.cmds.HelpCommand;
 import de.smoodi.projectchip.cmds.MCCommand;
 import de.smoodi.projectchip.cmds.MCRCommand;
+import de.smoodi.projectchip.listeners.CertificationListener;
 import de.smoodi.projectchip.listeners.JoinLeaveListener;
 import de.smoodi.projectchip.listeners.MessageListener;
 import de.smoodi.projectchip.sql.SQLBridge;
@@ -104,6 +105,7 @@ public class Main {
         //Dumping listeners.
         jda.addEventListener(new MessageListener());
         jda.addEventListener(new JoinLeaveListener());
+        jda.addEventListener(new CertificationListener());
 
     }
 

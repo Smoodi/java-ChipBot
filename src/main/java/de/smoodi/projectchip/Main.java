@@ -1,9 +1,6 @@
     package de.smoodi.projectchip;
 
-import de.smoodi.projectchip.cmds.CommandHandler;
-import de.smoodi.projectchip.cmds.HelpCommand;
-import de.smoodi.projectchip.cmds.MCCommand;
-import de.smoodi.projectchip.cmds.MCRCommand;
+import de.smoodi.projectchip.cmds.*;
 import de.smoodi.projectchip.listeners.CertificationListener;
 import de.smoodi.projectchip.listeners.JoinLeaveListener;
 import de.smoodi.projectchip.listeners.MessageListener;
@@ -97,6 +94,7 @@ public class Main {
         CommandHandler.registerTextCommand(new HelpCommand());
         CommandHandler.registerTextCommand(new MCCommand());
         CommandHandler.registerTextCommand(new MCRCommand());
+        CommandHandler.registerTextCommand(new UserInfoCommand());
 
         CommandHandler.getDefaultWhitelist().whitelist(539057336904450058L); // ?
         CommandHandler.getDefaultWhitelist().whitelist(542064174826520582L); // Botto

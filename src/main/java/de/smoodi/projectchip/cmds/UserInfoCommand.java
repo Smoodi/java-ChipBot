@@ -51,7 +51,7 @@ public class UserInfoCommand extends AbstractCommand {
         String ebIcon = ev.getGuild().getIconUrl();
         Color ebColor = new Color(0,153,255);
         Guild guild = ev.getGuild();
-        Member member;
+        Member member = null;
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(ebColor);
@@ -60,12 +60,18 @@ public class UserInfoCommand extends AbstractCommand {
         eb.setFooter(Util.randomTitleHelp(),ebIcon);
 
         if (args.length < 1) {
-            member = guild.getMemberById(ev.getAuthor().getId());
+            member = ev.getMessage().getMember();
         } else {
-            if (args[0].contains("#")) {
-                member = guild.getMemberByTag(args[0]);
+            if (ev.getMessage().getMentionedMembers().size() > 0) {
+                member = ev.getMessage().getMentionedMembers().get(0);
             } else {
-                member = guild.getMemberById(args[0]);
+                if(args[0].matches("\\d*")) {
+                    long uid = Long.parseLong(args[0]);
+                    member = guild.getMemberById(uid);
+                }
+                else {
+                    ev.getChannel().sendMessage(":x: Invalid user id. Try tagging instead.").queue();
+                }
             }
         }
 

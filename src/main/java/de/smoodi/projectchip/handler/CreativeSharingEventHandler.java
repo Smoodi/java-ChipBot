@@ -7,10 +7,13 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class CreativeSharingEventHandler {
 
     private static HashMap<Long, UserPostToken> permittedDescriptions = new HashMap<Long, UserPostToken>();
+
+    private final static Pattern pattern = Pattern.compile("(.*)?(http:\\/\\/|https:\\/\\/)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)(.*)?", Pattern.MULTILINE | Pattern.DOTALL);
 
     private static boolean isPermitted(Long userId) {
         if(permittedDescriptions.containsKey(userId)) {
@@ -49,9 +52,9 @@ public class CreativeSharingEventHandler {
                             "For further information, please contact a moderator or member of the staff team or consult the rules.\n" +
                             "This action has been logged. Usually there is no further action taken.").queue();
                 });
-                e.getGuild().getTextChannelById(537704220128837634L).sendMessage("User ID: " + e.getAuthor().getIdLong() +" ("+ e.getAuthor().getName() +")\n" +
-                        "Action taken: automatic verbal warning\n" +
-                        "Reason: chatting in <#522050963658244096>").queue();
+                e.getGuild().getTextChannelById(537704220128837634L).sendMessage("**User ID:** " + e.getAuthor().getIdLong() +" ("+ e.getAuthor().getName() +")\n" +
+                        "**Action taken:** automatic verbal warning\n" +
+                        "**Reason:** chatting in <#522050963658244096>").queue();
                 e.getMessage().delete().queue();
             }
             else {
@@ -65,9 +68,7 @@ public class CreativeSharingEventHandler {
     }
 
     private static boolean isMediaPost(Message e) {
-        return e.getAttachments().size() > 0 || e.getContentDisplay().matches(
-                ".*?(http:\\/\\/|https:\\/\\/)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?(.*)?"
-        );
+        return e.getAttachments().size() > 0 || pattern.matcher(e.getContentDisplay()).matches();
     }
 
 }

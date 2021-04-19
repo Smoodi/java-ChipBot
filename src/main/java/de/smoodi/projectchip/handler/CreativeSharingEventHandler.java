@@ -13,15 +13,19 @@ public class CreativeSharingEventHandler {
 
     private static HashMap<Long, UserPostToken> permittedDescriptions = new HashMap<Long, UserPostToken>();
 
-    private final static Pattern pattern = Pattern.compile("(.*)?(http:\\/\\/|https:\\/\\/)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)(.*)?", Pattern.MULTILINE | Pattern.DOTALL);
+    private final static Pattern pattern = Pattern.compile("(.)*((http|https):\\/\\/(www.|)[a-zA-Z0-9]+.[a-zA-Z0-9]+\\/([a-zA-Z0-9]+(\\/|))*)+(.)*", Pattern.MULTILINE | Pattern.DOTALL);
+    //private final static Pattern pattern = Pattern.compile("(.*)?(http:\\/\\/|https:\\/\\/)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)(.*)?", Pattern.MULTILINE | Pattern.DOTALL);
 
     private static boolean isPermitted(Long userId) {
         if(permittedDescriptions.containsKey(userId)) {
-            if(Duration.between(permittedDescriptions.get(userId).getPostTime(), OffsetDateTime.now()).toMinutes() < 5)
+            if(Duration.between(permittedDescriptions.get(userId).getPostTime(), OffsetDateTime.now()).toMinutes() < 5) {
+                System.out.println("The time past between the media post and the message sent now was < 5 minutes. We let it pass.");
                 return true;
+            }
             else {
                 //Automatic cleanup.
-                permittedDescriptions.remove(userId);
+                System.out.println("The time past between the media post and the message sent now was more than 5 minutes.. (User: " + userId+ ")");
+                revokePermission(userId);
                 return false;
             }
         }
@@ -29,6 +33,7 @@ public class CreativeSharingEventHandler {
     }
 
     public static void revokePermission(Long userId) {
+        System.out.println("We revoked user id " + userId + " 's creative channel permissions.");
         permittedDescriptions.remove(userId);
     }
 
@@ -36,7 +41,11 @@ public class CreativeSharingEventHandler {
 
         //Is MediaPost?
 
-        if (isMediaPost(e.getMessage())){
+        boolean isMedia = isMediaPost(e.getMessage());
+
+        System.out.println("Latest message: \"" + e.getMessage().getContentDisplay().substring(0,Math.min(e.getMessage().getContentDisplay().length(),15))+ " is MEDIA POST: " + String.valueOf(isMedia));
+
+        if (isMedia){
             grantCommentPermission(e.getAuthor(), e.getMessage());
         }
         else {
@@ -64,6 +73,7 @@ public class CreativeSharingEventHandler {
     }
 
     private static void grantCommentPermission(User author, Message message) {
+        System.out.println("The user " +author.getName() + " ( " + author.getIdLong() + " ) is now authorised for 5 minutes to send a message.");
         permittedDescriptions.put(author.getIdLong(), new UserPostToken(message.getTimeCreated(), message.getIdLong()));
     }
 

@@ -31,6 +31,8 @@ public class Config {
     private long excludedRoleReactionMsgId0;
     private long excludedRoleReactionMsgId1;
 
+    public static final String serverTimezone = "Europe/Berlin";
+
     public Config() {
     }
 

@@ -3,6 +3,7 @@ package de.smoodi.projectchip.sql;
 
 import de.smoodi.projectchip.Main;
 import de.smoodi.projectchip.mc.sql.UserProfile;
+import de.smoodi.projectchip.util.Config;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -171,7 +172,7 @@ public class SQLBridge {
 
         //We start a conneciton
         try {
-            con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + dbname, username, pw);
+            con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + dbname + "?serverTimezone="+Config.serverTimezone, username, pw);
             con.setAutoCommit(false);
 
             System.out.println("Successfully (re-)connected to the DB...");

@@ -13,7 +13,7 @@ public class CreativeSharingEventHandler {
 
     private static HashMap<Long, UserPostToken> permittedDescriptions = new HashMap<Long, UserPostToken>();
 
-    private final static Pattern pattern = Pattern.compile("(.)*((http|https):\\/\\/(www.|)[a-zA-Z0-9]+.[a-zA-Z0-9]+\\/([a-zA-Z0-9]+(\\/|))*)+(.)*", Pattern.MULTILINE | Pattern.DOTALL);
+    private final static Pattern pattern = Pattern.compile("(.)*((http|https):\\/\\/(www.|)[a-zA-Z0-9]+(.[a-zA-Z0-9]+)+\\/([a-zA-Z0-9]+(\\/|))*)+(.)*", Pattern.MULTILINE | Pattern.DOTALL);
     //private final static Pattern pattern = Pattern.compile("(.*)?(http:\\/\\/|https:\\/\\/)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)(.*)?", Pattern.MULTILINE | Pattern.DOTALL);
 
     private static boolean isPermitted(Long userId) {
@@ -59,7 +59,9 @@ public class CreativeSharingEventHandler {
                     channel.sendMessage("**Hello " + e.getAuthor().getName()+ ",**\nWe've reached out to inform you that we have deleted your message in #creative-sharing on " +
                             "Chipflake's Catto Club discord. Creative sharing is intended to be used for image and art posts only. You are permitted to add a single description message after a media post if this message is being posted within 5 minutes.\n"+
                             "For further information, please contact a moderator or member of the staff team or consult the rules.\n" +
-                            "This action has been logged. Usually there is no further action taken.").queue();
+                            "This action has been logged. Usually there is no further action taken.\n" +
+                            "If you think the automatic deletion of your post was wrong or un-rightfully so, please contact a member of the staff team." +
+                            "or Smoodi for bot purposes directly.").queue();
                 });
                 e.getGuild().getTextChannelById(537704220128837634L).sendMessage("**User ID:** " + e.getAuthor().getIdLong() +" ("+ e.getAuthor().getName() +")\n" +
                         "**Action taken:** automatic verbal warning\n" +

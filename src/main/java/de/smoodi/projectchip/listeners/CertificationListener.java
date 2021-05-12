@@ -2,6 +2,7 @@ package de.smoodi.projectchip.listeners;
 
 import de.smoodi.projectchip.Main;
 import de.smoodi.projectchip.sql.MemberProfile;
+import de.smoodi.projectchip.util.Config;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
@@ -39,8 +40,13 @@ public class CertificationListener extends ListenerAdapter {
                     System.err.println("I can smell it.. The code smell is real!");
                 });
             }
-        } catch (SQLException throwables) {
+        } catch (Exception throwables) {
             throwables.printStackTrace();
+            System.err.println("Retrying...");
+            Main.sqlpr.establishConnection();
+            event.getGuild().getTextChannelById(Config.moddoChatto).sendMessage("**Informations for the moderators:** \nSomeone attempted to certify themselves but the connection to the database failed.\n" +
+                    "Hence it was not possible for me to figure out whether or not they were banned. Please manually certify them.").queue();
+            System.err.println("We were not able to certify a user - logged.");
         }
     }
 

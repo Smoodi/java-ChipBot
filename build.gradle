@@ -42,8 +42,8 @@ dependencies {
 
     compile 'net.dv8tion:JDA:4.2.0_222'
     // this is for mysql java connector
-    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
-    runtime "mysql:mysql-connector-java:8.0.15"
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
+    runtime "mysql:mysql-connector-java:8.0.25"
 }
 
 /*

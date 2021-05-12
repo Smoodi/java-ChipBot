@@ -32,6 +32,7 @@ public class Config {
     private long excludedRoleReactionMsgId1;
 
     public static final String serverTimezone = "Europe/Berlin";
+    public static final long moddoChatto = 531768731370520578L;
 
     public Config() {
     }

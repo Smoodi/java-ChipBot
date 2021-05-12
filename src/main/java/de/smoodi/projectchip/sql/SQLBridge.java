@@ -156,6 +156,11 @@ public class SQLBridge {
      * @throws SQLException
      */
     private void fixClosedTimeout() throws SQLException {
+        if(con == null) {
+            establishConnection();
+            return;
+        }
+
         if(!con.isClosed()) {
             if(con.isValid(2)) {}//nothing
             else {
@@ -168,11 +173,11 @@ public class SQLBridge {
     /**
      * Establishes a new connection to the database.
      */
-    private void establishConnection() {
+    public void establishConnection() {
 
         //We start a conneciton
         try {
-            con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + dbname + "?serverTimezone="+Config.serverTimezone, username, pw);
+            con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + dbname + "?useSSL=false", username, pw);
             con.setAutoCommit(false);
 
             System.out.println("Successfully (re-)connected to the DB...");

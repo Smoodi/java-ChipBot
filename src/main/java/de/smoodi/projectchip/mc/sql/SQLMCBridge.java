@@ -185,7 +185,7 @@ public class SQLMCBridge {
 
         //We start a connection
         try {
-            con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + dbname + "?serverTimezone=" + Config.serverTimezone, username, pw);
+            con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + dbname + "?useSSL=false", username, pw);
             con.setAutoCommit(false);
 
             System.out.println("Successfully (re-)connected to the DB...");

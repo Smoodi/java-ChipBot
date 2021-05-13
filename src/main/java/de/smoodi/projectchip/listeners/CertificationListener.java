@@ -44,7 +44,7 @@ public class CertificationListener extends ListenerAdapter {
             throwables.printStackTrace();
             System.err.println("Retrying...");
             Main.sqlpr.establishConnection();
-            event.getGuild().getTextChannelById(Config.moddoChatto).sendMessage("**Informations for the moderators:** \nSomeone attempted to certify themselves but the connection to the database failed.\n" +
+            event.getGuild().getTextChannelById(Main.mainConfig.getModdoChatto()).sendMessage("**Informations for the moderators:** \nSomeone attempted to certify themselves but the connection to the database failed.\n" +
                     "Hence it was not possible for me to figure out whether or not they were banned. Please manually certify them.").queue();
             System.err.println("We were not able to certify a user - logged.");
         }

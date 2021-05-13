@@ -1,5 +1,6 @@
 package de.smoodi.projectchip.handler;
 
+import de.smoodi.projectchip.Main;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageHistory;
@@ -45,7 +46,8 @@ public class CreativeSharingEventHandler {
 
         //Is MediaPost?
 
-        boolean isMedia = isMediaPost(e.getMessage());
+        POST_ERROR post_error = (isMediaPost(e.getMessage()));
+        boolean isMedia = ( post_error == POST_ERROR.SUCCESS_ONLINE || post_error == POST_ERROR.SUCCESS_ATTACHEMENT );
 
         System.out.println("Latest message: \"" + e.getMessage().getContentDisplay().substring(0,Math.min(e.getMessage().getContentDisplay().length(),15))+ " is MEDIA POST: " + String.valueOf(isMedia));
 
@@ -65,16 +67,19 @@ public class CreativeSharingEventHandler {
                             "Please make sure the messages you send fit the following criteria: \n"+
                             " - They contain 1 attachment / image max. per message sent\n"+
                             " - You sent 3 messages max. in a row (only 3 images total in a row)\n"+
-                            " - Stream links have been moved to the gaming channel for advertisement purposes.\n" +
+                            " - Livestream links should be posted to a relevant community channel to reduce spam.\n" +
                             " - Your description message (must still not be more than 3 messages total) must be sent within 5 minutes after sending your image / creative content.\n\n" +
                             "For further information, please contact a moderator or member of the staff team or consult the rules.\n" +
                             "This action has been logged. Usually there is no further action taken.\n" +
                             "If you think the automatic deletion of your post was wrong or un-rightfully so, please contact a member of the staff team " +
                             "or Smoodi for bot purposes directly.\n").queue();
                 });
-                e.getGuild().getTextChannelById(537704220128837634L).sendMessage("**User ID:** " + e.getAuthor().getIdLong() +" ("+ e.getAuthor().getName() +")\n" +
+                e.getGuild().getTextChannelById(Main.mainConfig.getModLogChannel()).sendMessage("**User ID:** " + e.getAuthor().getIdLong() +" ("+ e.getAuthor().getName() +")\n" +
                         "**Action taken:** automatic verbal warning\n" +
-                        "**Reason:** chatting in <#522050963658244096>").queue();
+                        "**Reason:** chatting in <#"+ Main.mainConfig.getCreativeSharingChannel()+">\n" +
+                        "**Automatic bot flag triggered:** "+post_error.name()+"\n" +
+                        "**Attached files count:** "+e.getMessage().getAttachments().size()+"\n" +
+                        "**Original message:** ``" + trimMessage(e.getMessage().getContentDisplay(), 255) + "``").queue();
                 e.getMessage().delete().queue();
             }
             else {
@@ -88,16 +93,34 @@ public class CreativeSharingEventHandler {
         permittedDescriptions.put(author.getIdLong(), new UserPostToken(message.getTimeCreated(), message.getIdLong()));
     }
 
-    private static boolean isMediaPost(Message e) {
+    private static POST_ERROR isMediaPost(Message e) {
+        //We make sure it was not too many messages in a row
+        if (isLastMessagesAuthor(3, e.getChannel(), e.getAuthor())) return POST_ERROR.TOO_MANY_MESSAGES;
+        //Make sure it is no livestream.
+        if (e.getContentDisplay().toLowerCase().contains("twitch.tv")) return POST_ERROR.LIVESTREAM;
+        if (e.getContentDisplay().toLowerCase().contains("picarto.tv")) return POST_ERROR.LIVESTREAM;
+        if (e.getContentDisplay().toLowerCase().contains("piczel.tv")) return POST_ERROR.LIVESTREAM;
+
+        if(e.getAttachments().size() > 1) return POST_ERROR.TOO_MANY_ATTACHEMENTS;
+        else if (pattern.matcher(e.getContentDisplay()).matches()) {
+            //It at least contains a web post.
+
+            //Make sure it does not contain an attachements as well
+            return (e.getAttachments().size() != 0) ? POST_ERROR.ATTACHEMENT_AND_LINK : POST_ERROR.SUCCESS_ONLINE;
+        } else {
+            return (e.getAttachments().size() == 1) ? POST_ERROR.SUCCESS_ATTACHEMENT : POST_ERROR.NO_MEDIA;
+        }
+        /*
         return (e.getAttachments().size() == 1 ||
                 pattern.matcher(e.getContentDisplay()).matches())
                 && !isLastMessagesAuthor(3, e.getChannel(), e.getAuthor())
                 && !e.getContentDisplay().toLowerCase().contains("twitch.tv");
+                */
     }
 
     private static boolean isLastMessagesAuthor(int count, MessageChannel channel, User author) {
         MessageHistory _m = channel.getHistory();
-        _m.retrievePast(3).complete();
+        _m.retrievePast(count).complete();
         List<Message> history = _m.getRetrievedHistory();
         User u = history.get(0).getAuthor();
         System.out.println("Last message (" + "0" + ") is by: " + u.getName());
@@ -108,6 +131,21 @@ public class CreativeSharingEventHandler {
                 else u = _u;
             };
         return true;
+    }
+
+    public enum POST_ERROR {
+        NO_MEDIA,
+        SUCCESS_ONLINE,
+        SUCCESS_ATTACHEMENT,
+        TOO_MANY_MESSAGES,
+        ATTACHEMENT_AND_LINK,
+        TOO_MANY_ATTACHEMENTS,
+        LIVESTREAM
+    }
+
+    private static String trimMessage(String msg, int maxLength) {
+        if(msg == "") return "EMPTY_MSG";
+        return (msg.length() > maxLength) ? msg.substring(0,maxLength-1) + "..." : msg;
     }
 
 }

@@ -30,9 +30,11 @@ public class Config {
     private long certifiedRoleId;
     private long excludedRoleReactionMsgId0;
     private long excludedRoleReactionMsgId1;
+    private long creativeSharingChannel;
+    private long moddoChatto;
+    private long modLogChannel;
 
     public static final String serverTimezone = "Europe/Berlin";
-    public static final long moddoChatto = 531768731370520578L;
 
     public Config() {
     }
@@ -66,6 +68,9 @@ public class Config {
         rulesChannelId = (long) obj.get("rulesChannelId");
         excludedRoleReactionMsgId0 = (long) obj.get("excludedRoleReactionMsgId0");
         excludedRoleReactionMsgId1 = (long) obj.get("excludedRoleReactionMsgId1");
+        moddoChatto = (long) obj.get("modChannelId");
+        creativeSharingChannel = (long) obj.get("creativeSharingChannelId");
+        modLogChannel = (long)obj.get("modLogChannelId");
 
         return true;
 
@@ -127,4 +132,28 @@ public class Config {
 
     public long getExcludedRoleReactionMsgId() { return excludedRoleReactionMsgId0; }
     public long getExcludedRoleReactionMsgId2() { return excludedRoleReactionMsgId1; }
+
+    public long getModdoChatto() {
+        return moddoChatto;
+    }
+
+    public void setModdoChatto(long moddoChatto) {
+        this.moddoChatto = moddoChatto;
+    }
+
+    public long getCreativeSharingChannel() {
+        return creativeSharingChannel;
+    }
+
+    public void setCreativeSharingChannel(long creativeSharingChannel) {
+        this.creativeSharingChannel = creativeSharingChannel;
+    }
+
+    public long getModLogChannel() {
+        return modLogChannel;
+    }
+
+    public void setModLogChannel(long modLogChannel) {
+        this.modLogChannel = modLogChannel;
+    }
 }

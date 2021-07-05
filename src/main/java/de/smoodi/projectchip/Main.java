@@ -6,6 +6,7 @@ import de.smoodi.projectchip.listeners.JoinLeaveListener;
 import de.smoodi.projectchip.listeners.MessageListener;
 import de.smoodi.projectchip.sql.SQLBridge;
 import de.smoodi.projectchip.mc.sql.SQLMCBridge;
+import de.smoodi.projectchip.util.BotStatusMessage;
 import de.smoodi.projectchip.util.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -62,26 +63,14 @@ public class Main {
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
 
         //We choose a random but cool text.
-        String[][] statuses = {{"Chipflake videos.", 0},
-                               {"over the server...", 0},
-                               {"Chipflake intro music on repeat.", 1},
-                               {"Hide and seek but is very bad at it.", 2},
-                               {"nothing", 0}};
+        BotStatusMessage[] statuses = { new BotStatusMessage(BotStatusMessage.ACTIVITY_WATCHING, "Chipflake videos."),
+                                        new BotStatusMessage(BotStatusMessage.ACTIVITY_WATCHING, "over the server..."),
+                                        new BotStatusMessage(BotStatusMessage.ACTIVITY_LISTENING, "Chipflake intro music on repeat."),
+                                        new BotStatusMessage(BotStatusMessage.ACTIVITY_PLAYING, "Hide and seek but is very bad at it."),
+                                        new BotStatusMessage(BotStatusMessage.ACTIVITY_WATCHING, "nothing")};
         int chosenStatus = new Random().nextInt(statuses.length);
-        StringBuilder randomStatus = new Stringbuilder();
-        randomStatus.append(statuses.get(chosenStatus).get(0)+" | "+mainConfig.getBotPrefix()+"help");
 
-        switch (statuses.get(0).get(1)) {
-            case 0:
-                builder.setActivity(Activity.watching(randomStatus.toString()));
-                break;
-            case 1:
-                builder.setActivity(Activity.listening(randomStatus.toString()));
-                break;
-            case 2:
-                builder.setActivity(Activity.playing(randomStatus.toString()));
-                break;
-        }
+        builder.setActivity(statuses[chosenStatus].compile());
 
         //Building JDA.
         JDA jda;

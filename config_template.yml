@@ -1,0 +1,23 @@
+# Most lines have been left blank. For bot testing purposes please fill in the values accordingly.
+# Please rename file to config.yml
+
+botToken:
+botVersion: "1.02a_dev"
+botPrefix: "~"
+whitelistDBHost:
+whitelistDBName:
+whitelistDBPort:
+whitelistDBUser:
+whitelistDBPassword:
+primaryDBHost:
+primaryDBName:
+primaryDBPort:
+primaryDBUser:
+primaryDBPassword:
+certifiedRoleId:
+rulesChannelId:
+excludedRoleReactionMsgId0:
+excludedRoleReactionMsgId1:
+modChannelId:
+creativeSharingChannelId:
+modLogChannelId:

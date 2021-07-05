@@ -62,20 +62,25 @@ public class Main {
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
 
         //We choose a random but cool text.
-        int i = new Random().nextInt(4);
-        switch (i) {
+        String[][] statuses = {{"Chipflake videos.", 0},
+                               {"over the server...", 0},
+                               {"Chipflake intro music on repeat.", 1},
+                               {"Hide and seek but is very bad at it.", 2},
+                               {"nothing", 0}};
+        int chosenStatus = new Random().nextInt(statuses.length);
+        StringBuilder randomStatus = new Stringbuilder();
+        randomStatus.append(statuses.get(chosenStatus).get(0)+" | "+mainConfig.getBotPrefix()+"help");
+
+        switch (statuses.get(0).get(1)) {
             case 0:
-                builder.setActivity(Activity.watching("Chipflake videos."));
+                builder.setActivity(Activity.watching(randomStatus.toString()));
                 break;
             case 1:
-                builder.setActivity(Activity.watching("over the server..."));
+                builder.setActivity(Activity.listening(randomStatus.toString()));
                 break;
             case 2:
-                builder.setActivity(Activity.listening("Chipflake intro music on repeat."));
-            case 3:
-                builder.setActivity(Activity.playing("Hide and seek but is very bad at it."));
-            case 4:
-                builder.setActivity(Activity.watching("nothing"));
+                builder.setActivity(Activity.playing(randomStatus.toString()));
+                break;
         }
 
         //Building JDA.

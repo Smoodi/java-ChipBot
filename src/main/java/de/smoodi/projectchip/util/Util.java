@@ -26,4 +26,8 @@ public class Util {
                 return "Help page";
         }
     }
+
+    public static String removeInvalidCharacters(String str) {
+        return str.replaceAll("'", "").replaceAll("\"", "");
+    }
 }

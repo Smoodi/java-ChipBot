@@ -4,6 +4,7 @@ package de.smoodi.projectchip.sql;
 import de.smoodi.projectchip.Main;
 import de.smoodi.projectchip.mc.sql.UserProfile;
 import de.smoodi.projectchip.util.Config;
+import de.smoodi.projectchip.util.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -145,7 +146,7 @@ public class SQLBridge {
     public boolean addUserEntry(long discordId, String joinName) throws SQLException {
         fixClosedTimeout();
         PreparedStatement stm = con.prepareStatement("INSERT INTO `certifiedUsers` (`DiscordID`, `FirstJoinName`) VALUES ('" +
-                String.valueOf(discordId) + "', '" + joinName + "');");
+                String.valueOf(discordId) + "', '" + Util.removeInvalidCharacters(joinName) + "');");
         boolean success = stm.execute();
         stm.close();
         return success;

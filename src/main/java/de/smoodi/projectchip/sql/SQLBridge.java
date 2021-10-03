@@ -71,7 +71,8 @@ public class SQLBridge {
      */
     public boolean existsUserEntry(long discordId) throws SQLException {
         fixClosedTimeout();
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM certifiedUsers WHERE DiscordID = \""+ String.valueOf(discordId) + "\";");
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM certifiedUsers WHERE DiscordID = ?");
+        stm.setLong(1, discordId);
         if(!stm.execute()) {
             stm.close();
             return false;
@@ -86,7 +87,8 @@ public class SQLBridge {
 
     public MemberProfile getMemberInformation(long discordId) throws SQLException {
         fixClosedTimeout();
-        PreparedStatement stm = con.prepareStatement("SELECT * FROM certifiedUsers WHERE DiscordID="+String.valueOf(discordId)+";");
+        PreparedStatement stm = con.prepareStatement("SELECT * FROM certifiedUsers WHERE DiscordID = ?");
+        stm.setLong(1, discordId);
         if(stm.execute()) {
             ResultSet r = stm.getResultSet();
             if(!r.next()) {
@@ -113,8 +115,9 @@ public class SQLBridge {
      */
     public boolean setCertification(long discordId, boolean certified) throws SQLException {
         fixClosedTimeout();
-        PreparedStatement stm = con.prepareStatement("UPDATE certifiedUsers SET IsCertified = '" + (certified ? 1 : 0 ) +
-                "'  WHERE DiscordID = '"+String.valueOf(discordId)+"';");
+        PreparedStatement stm = con.prepareStatement("UPDATE certifiedUsers SET IsCertified = ? WHERE DiscordID = ?");
+        stm.setBoolean(1, certified);
+        stm.setLong(2, discordId);
         boolean success = stm.execute();
         stm.close();
         return success;
@@ -129,8 +132,9 @@ public class SQLBridge {
      */
     public boolean setBanned(long discordId, boolean banned) throws SQLException {
         fixClosedTimeout();
-        PreparedStatement stm = con.prepareStatement("UPDATE certifiedUsers SET IsBanned = '" + (banned ? 1 : 0 ) +
-                "'  WHERE DiscordID = '"+String.valueOf(discordId)+"';");
+        PreparedStatement stm = con.prepareStatement("UPDATE certifiedUsers SET IsBanned = ? WHERE DiscordID = ?");
+        stm.setBoolean(1,banned);
+        stm.setLong(2,discordId);
         boolean success = stm.execute();
         stm.close();
         return success;
@@ -145,8 +149,9 @@ public class SQLBridge {
      */
     public boolean addUserEntry(long discordId, String joinName) throws SQLException {
         fixClosedTimeout();
-        PreparedStatement stm = con.prepareStatement("INSERT INTO `certifiedUsers` (`DiscordID`, `FirstJoinName`) VALUES ('" +
-                String.valueOf(discordId) + "', '" + Util.removeInvalidCharacters(joinName) + "');");
+        PreparedStatement stm = con.prepareStatement("INSERT INTO `certifiedUsers` (`DiscordID`, `FirstJoinName`) VALUES ( ?, ? )");
+        stm.setLong(1, discordId);
+        stm.setString(2,Util.removeInvalidCharacters(joinName));
         boolean success = stm.execute();
         stm.close();
         return success;

@@ -57,7 +57,7 @@ public class MCCommand extends AbstractCommand{
                     eb.setImage("https://crafatar.com/renders/body/" + p.getUuid().toString());
                     eb.setFooter("Copyright (c) 2020 - All rights reserved. Minecraft is owned by Mojang AB - Bot provided by Smoodi");
 
-                    ev.getChannel().sendMessage(eb.build()).queue();
+                    ev.getChannel().sendMessageEmbeds(eb.build()).queue();
                 } else {
 
                     ev.getChannel().sendMessage("There is no minecraft account associated with your discord account yet. Please enter ``" + Main.mainConfig.getBotPrefix() + "mc <username>`` to bind an account.").queue();

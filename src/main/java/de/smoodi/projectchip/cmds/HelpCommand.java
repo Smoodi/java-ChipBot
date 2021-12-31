@@ -105,7 +105,7 @@ public class HelpCommand extends AbstractCommand {
         if (sbConceptual.length() > 0) {
             ev.getChannel().sendMessage(sbConceptual.toString()).queue();
         } else {
-            ev.getChannel().sendMessage(eb.build()).queue();
+            ev.getChannel().sendMessageEmbeds(eb.build()).queue();;
         }
     }
 

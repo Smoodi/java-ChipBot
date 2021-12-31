@@ -1,20 +1,15 @@
 package de.smoodi.projectchip.listeners;
 
 import de.smoodi.projectchip.Main;
-import de.smoodi.projectchip.cmds.AbstractCommand;
 import de.smoodi.projectchip.cmds.CommandHandler;
-import de.smoodi.projectchip.cmds.HelpCommand;
-import de.smoodi.projectchip.handler.CreativeSharingEventHandler;
-import de.smoodi.projectchip.util.Config;
+import de.smoodi.projectchip.handler.CreativeChannelEventHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import javax.xml.bind.annotation.XmlType;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
 public class MessageListener extends ListenerAdapter {
+
+    private CreativeChannelEventHandler _creativeSharing = new CreativeChannelEventHandler();
+    private CreativeChannelEventHandler _chipSharing = new CreativeChannelEventHandler();
 
     /**
      * Fired when a message is received.
@@ -26,10 +21,10 @@ public class MessageListener extends ListenerAdapter {
         /**
          * Message handling
          */
-        if (e.getChannel().getIdLong() == Main.mainConfig.getCreativeSharingChannel()) {
-            //This is our creative sharing chat.
-            CreativeSharingEventHandler.handle(e);
-        }
+        if (e.getChannel().getIdLong() == Main.mainConfig.getCreativeSharingChannel())
+            _creativeSharing.handle(e);
+        else if (e.getChannel().getIdLong() == Main.mainConfig.getChipSharingChannel())
+            _chipSharing.handle(e);
         else {
             String msg = e.getMessage().getContentRaw();
 

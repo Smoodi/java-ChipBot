@@ -89,7 +89,7 @@ public class UserInfoCommand extends AbstractCommand {
             eb.addField("User not found", "This user does not exist", false);
         }
 
-        ev.getChannel().sendMessage(eb.build()).queue();
+        ev.getChannel().sendMessageEmbeds(eb.build()).queue();
 
     }
 

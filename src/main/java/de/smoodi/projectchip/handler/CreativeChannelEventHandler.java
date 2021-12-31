@@ -7,21 +7,24 @@ import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class CreativeSharingEventHandler {
+public class CreativeChannelEventHandler {
 
-    private static HashMap<Long, UserPostToken> permittedDescriptions = new HashMap<Long, UserPostToken>();
+    private HashMap<Long, UserPostToken> permittedDescriptions = new HashMap<Long, UserPostToken>();
+    private DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm");
 
-    private final static Pattern pattern = Pattern.compile("(.)*((http|https):\\/\\/(www.|)[a-zA-Z0-9]+(.[a-zA-Z0-9]+)+\\/([a-zA-Z0-9]+(\\/|))*)+(.)*", Pattern.MULTILINE | Pattern.DOTALL);
+    private final Pattern pattern = Pattern.compile("(.)*((http|https):\\/\\/(www.|)[a-zA-Z0-9]+(.[a-zA-Z0-9]+)+\\/([a-zA-Z0-9]+(\\/|))*)+(.)*", Pattern.MULTILINE | Pattern.DOTALL);
     //private final static Pattern pattern = Pattern.compile("(.*)?(http:\\/\\/|https:\\/\\/)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)(.*)?", Pattern.MULTILINE | Pattern.DOTALL);
 
-    private static boolean isPermitted(Long userId) {
+    private boolean isPermitted(Long userId) {
         if(permittedDescriptions.containsKey(userId)) {
             if(Duration.between(permittedDescriptions.get(userId).getPostTime(), OffsetDateTime.now()).toMinutes() < 5) {
                 System.out.println("The time past between the media post and the message sent now was < 5 minutes. We let it pass.");
@@ -37,12 +40,12 @@ public class CreativeSharingEventHandler {
         else return false;
     }
 
-    public static void revokePermission(Long userId) {
+    public void revokePermission(Long userId) {
         System.out.println("We revoked user id " + userId + " 's creative channel permissions.");
         permittedDescriptions.remove(userId);
     }
 
-    public static void handle(MessageReceivedEvent e) {
+    public void handle(MessageReceivedEvent e) {
 
         //Is MediaPost?
 
@@ -53,6 +56,7 @@ public class CreativeSharingEventHandler {
 
         if (isMedia){
             grantCommentPermission(e.getAuthor(), e.getMessage());
+            createThread(e.getMessage());
         }
         else {
 
@@ -62,8 +66,8 @@ public class CreativeSharingEventHandler {
             {
                 e.getAuthor().openPrivateChannel().queue((channel) ->
                 {
-                    channel.sendMessage("**Hello " + e.getAuthor().getName()+ ",**\nWe've reached out to inform you that we have deleted your message in #creative-sharing on " +
-                            "Chipflake's Catto Club discord. Creative sharing is intended to be used for image and art posts only. You are permitted to add a single description message after a media post if this message is being posted within 5 minutes.\n"+
+                    channel.sendMessage("**Hello " + e.getAuthor().getName()+ ",**\nWe've reached out to inform you that we have deleted your message in "+e.getChannel().getName()+" on " +
+                            "Chipflake's Catto Club discord. "+e.getChannel().getName()+" is intended to be used for image and art posts only. You are permitted to add a single description message after a media post if this message is being posted within 5 minutes.\n"+
                             "Please make sure the messages you send fit the following criteria: \n"+
                             " - They contain 1 attachment / image max. per message sent\n"+
                             " - You sent 3 messages max. in a row (only 3 images total in a row)\n"+
@@ -76,7 +80,7 @@ public class CreativeSharingEventHandler {
                 });
                 e.getGuild().getTextChannelById(Main.mainConfig.getModLogChannel()).sendMessage("**User ID:** " + e.getAuthor().getIdLong() +" ("+ e.getAuthor().getName() +")\n" +
                         "**Action taken:** automatic verbal warning\n" +
-                        "**Reason:** chatting in <#"+ Main.mainConfig.getCreativeSharingChannel()+">\n" +
+                        "**Reason:** chatting in <#"+ e.getChannel().getIdLong()+">\n" +
                         "**Automatic bot flag triggered:** "+post_error.name()+"\n" +
                         "**Attached files count:** "+e.getMessage().getAttachments().size()+"\n" +
                         "**Original message:** ``" + trimMessage(e.getMessage().getContentDisplay(), 255) + "``").queue();
@@ -88,12 +92,17 @@ public class CreativeSharingEventHandler {
         }
     }
 
-    private static void grantCommentPermission(User author, Message message) {
+    private void createThread(Message message) {
+        message.createThreadChannel("Conversation about " + message.getAuthor().getName() +
+                "'s post (" + message.getTimeCreated().toLocalDateTime().format(dateFormat) + ")").queue();
+    }
+
+    private void grantCommentPermission(User author, Message message) {
         System.out.println("The user " +author.getName() + " ( " + author.getIdLong() + " ) is now authorised for 5 minutes to send a message.");
         permittedDescriptions.put(author.getIdLong(), new UserPostToken(message.getTimeCreated(), message.getIdLong()));
     }
 
-    private static POST_ERROR isMediaPost(Message e) {
+    private POST_ERROR isMediaPost(Message e) {
         //We make sure it was not too many messages in a row
         if (isLastMessagesAuthor(3, e.getChannel(), e.getAuthor())) return POST_ERROR.TOO_MANY_MESSAGES;
         //Make sure it is no livestream.
@@ -118,7 +127,7 @@ public class CreativeSharingEventHandler {
                 */
     }
 
-    private static boolean isLastMessagesAuthor(int count, MessageChannel channel, User author) {
+    private boolean isLastMessagesAuthor(int count, MessageChannel channel, User author) {
         MessageHistory _m = channel.getHistory();
         _m.retrievePast(count).complete();
         List<Message> history = _m.getRetrievedHistory();
@@ -143,7 +152,7 @@ public class CreativeSharingEventHandler {
         LIVESTREAM
     }
 
-    private static String trimMessage(String msg, int maxLength) {
+    private String trimMessage(String msg, int maxLength) {
         if(msg == "") return "EMPTY_MSG";
         return (msg.length() > maxLength) ? msg.substring(0,maxLength-1) + "..." : msg;
     }

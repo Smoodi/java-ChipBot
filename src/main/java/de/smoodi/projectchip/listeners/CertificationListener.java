@@ -19,8 +19,8 @@ public class CertificationListener extends ListenerAdapter {
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
 
         if(event.getChannel().getIdLong() != Main.mainConfig.getRulesChannelId()) return;
-        if(event.getMessageIdLong() == Main.mainConfig.getExcludedRoleReactionMsgId()) return;
-        if(event.getMessageIdLong() == Main.mainConfig.getExcludedRoleReactionMsgId2()) return;
+        if(event.getMessageIdLong() == Main.mainConfig.getExcludedRoleReactionMsgId0()) return;
+        if(event.getMessageIdLong() == Main.mainConfig.getExcludedRoleReactionMsgId1()) return;
         if(!event.getReactionEmote().equals(MessageReaction.ReactionEmote.fromUnicode("\uD83D\uDC7D", event.getJDA()))) { System.out.println("Wrong emote."); return; }
         try {
             if (!Main.sqlpr.existsUserEntry(event.getUser().getIdLong())) {
